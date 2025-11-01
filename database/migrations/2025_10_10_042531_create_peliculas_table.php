@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('image');
-            $table->string('link')->unique();
+            $table->string('link', 500)->unique();
             $table->timestamps();
         });
 

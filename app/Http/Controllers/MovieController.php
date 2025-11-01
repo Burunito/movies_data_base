@@ -15,7 +15,13 @@ class MovieController extends Controller
     public function index(Request $request)
     {
         $q = $request->query('q');
+        $genreId = $request->query('genre');
         $movies = Movie::when($q, fn($query) => $query->where('title', 'like', "%$q%"))
+                        ->when($genreId, function ($query, $genreId) {
+                            $query->whereHas('genres', function ($q) use ($genreId) {
+                                $q->where('genres.id', $genreId);
+                            });
+                        })
                         ->with('genres')
                         ->orderBy('title')
                         ->get();

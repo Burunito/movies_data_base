@@ -166,7 +166,7 @@
                                 class="w-16 h-16 object-cover rounded cursor-pointer" 
                                 @click="zoomOpen = true"
                             >
-                            <a :href="movie.link" target="_blank" class="text-blue-600 font-semibold truncate" x-text="movie.name"></a>
+                            <a :href="movie.link" target="_blank" class="text-blue-600 font-semibold truncate" x-text="movie.title"></a>
 
                             <!-- Zoom Modal -->
                             <div 
@@ -253,7 +253,7 @@
                                 class="w-16 h-16 object-cover rounded cursor-pointer" 
                                 @click="zoomOpen = true"
                             >
-                            <a :href="link.link" target="_blank" class="text-blue-600 font-semibold truncate" x-text="link.name"></a>
+                            <a :href="link.url" target="_blank" class="text-blue-600 font-semibold truncate" x-text="link.title"></a>
 
                             <!-- Zoom Modal -->
                             <div 

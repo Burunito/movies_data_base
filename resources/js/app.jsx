@@ -34,7 +34,7 @@ Alpine.data('app', () => ({
         this.$watch('actorSearch', async (value) => {
             const q = value.trim();
             if (q === '') {
-                await this.cargarDatos(); // Si está vacío, recarga todo
+                await this.cargarDatos('actors'); // Si está vacío, recarga todo
             } else {
                 await this.search('actors'); // Si tiene texto, busca
             }
@@ -42,7 +42,7 @@ Alpine.data('app', () => ({
         this.$watch('movieSearch', async (value) => {
             const q = value.trim();
             if (q === '') {
-                await this.cargarDatos();
+                await this.cargarDatos('movies');
             } else {
                 await this.search('movies');
             }
@@ -50,29 +50,40 @@ Alpine.data('app', () => ({
         this.$watch('linkSearch', async (value) => {
             const q = value.trim();
             if (q === '') {
-                await this.cargarDatos();
+                await this.cargarDatos('links');
             } else {
                 await this.search('links');
             }
         });
-        this.$watch('selectedGenre', async (value) => {
-            if (!value) {
-                await this.cargarDatos();
-            } else {
-                await this.filterByGenre(this.tab);
-            }
-        });
     },
 
-    async cargarDatos() {
+    async cargarDatos(type) {
         try {
-            const resActors = await axios.get('/api/actors');
-            const resMovies = await axios.get('/api/movies');
-            const resLinks = await axios.get('/api/links');
+            if (type) {
+                switch(type) {
+                     case 'actors':
+                        const resActors = await axios.get('/api/actors');
+                        this.actors = resActors.data;
+                        break;
+                    case 'movies':
+                        const resMovies = await axios.get('/api/movies');
+                        this.movies = resMovies.data;
+                        break;
+                    case 'links':
+                        const resLinks = await axios.get('/api/links');
+                        this.links = resLinks.data;
+                        break;
+                    default:
+                }
+            } else {
+                const resActors = await axios.get('/api/actors');
+                const resMovies = await axios.get('/api/movies');
+                const resLinks = await axios.get('/api/links');
 
-            this.actors = resActors.data;
-            this.movies = resMovies.data;
-            this.links = resLinks.data;
+                this.actors = resActors.data;
+                this.movies = resMovies.data;
+                this.links = resLinks.data;
+            }
             this.errorMessage = '';
         } catch (e) {
             console.error(e);
@@ -85,7 +96,7 @@ Alpine.data('app', () => ({
         try {
             if (!confirm('Sure to delete?')) return;
             await axios.delete(`/api/${type}/${id}`);
-            await this.cargarDatos();
+            await this.cargarDatos(type);
             this.errorMessage = '';
         } catch (e) {
             console.error(e);
@@ -223,7 +234,7 @@ Alpine.data('app', () => ({
             this.editType = '';
             this.editItem = null;
 
-            await this.cargarDatos();
+            await this.cargarDatos(type);
             this.errorMessage = '';
         } catch (e) {
             console.error(e);
@@ -312,7 +323,7 @@ Alpine.data('app', () => ({
         const genreId = this.selectedGenre;
 
         if (!genreId) {
-            await this.cargarDatos(); // Reload all if no genre selected
+            await this.cargarDatos(type); // Reload all if no genre selected
             return;
         }
 

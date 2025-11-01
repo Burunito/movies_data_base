@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('actors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('link')->unique();
+            $table->string('link', 500)->unique();
             $table->longText('image')->nullable();
             $table->timestamps();
         });
